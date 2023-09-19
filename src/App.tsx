@@ -5,10 +5,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DefaultLayout from "./layouts/DefaultLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import NotificationBar from "./components/notification/NotificationBar";
 
 function App() {
   return (
     <>
+      <NotificationBar />
       <Routes>
         <Route element={<DefaultLayout />}>
           <Route path="/login" element={<Login />} />

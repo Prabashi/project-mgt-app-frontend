@@ -13,6 +13,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { register } from "../slices/authSlice";
+import {
+  showNotification,
+  NotificationType,
+} from "../slices/notificationSlice";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -24,19 +28,20 @@ const Register = () => {
   const handleRegister = async () => {
     // This is only a basic validation of inputs. Improve this as needed.
     if (name && email && password) {
-      try {
-        await dispatch(
-          register({
-            name,
-            email,
-            password,
-          })
-        ).unwrap();
-      } catch (e) {
-        console.error(e);
-      }
+      dispatch(
+        register({
+          name,
+          email,
+          password,
+        })
+      );
     } else {
-      // Show an error message.
+      dispatch(
+        showNotification({
+          message: "Please fill out all the required fields",
+          type: NotificationType.Error,
+        })
+      );
     }
   };
 
