@@ -18,12 +18,8 @@ const Home = () => {
   }, [basicUserInfo]);
 
   const handleLogout = async () => {
-    try {
-      await dispatch(logout()).unwrap();
-      navigate("/login");
-    } catch (e) {
-      console.error(e);
-    }
+    await dispatch(logout());
+    navigate("/login");
   };
 
   return (

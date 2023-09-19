@@ -13,6 +13,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/redux-hooks";
 import { login } from "../slices/authSlice";
+import {
+  showNotification,
+  NotificationType,
+} from "../slices/notificationSlice";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -23,18 +27,19 @@ const Login = () => {
   const handleLogin = async () => {
     // This is only a basic validation of inputs. Improve this as needed.
     if (email && password) {
-      try {
-        await dispatch(
-          login({
-            email,
-            password,
-          })
-        ).unwrap();
-      } catch (e) {
-        console.error(e);
-      }
+      dispatch(
+        login({
+          email,
+          password,
+        })
+      );
     } else {
-      // Show an error message.
+      dispatch(
+        showNotification({
+          message: "Please provide email and password",
+          type: NotificationType.Error,
+        })
+      );
     }
   };
 

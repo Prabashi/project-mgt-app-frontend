@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
 import { AxiosError } from "axios";
+import { showNotification, NotificationType } from "./notificationSlice";
 
 type User = {
   email: string;
@@ -22,10 +23,6 @@ type UserProfileData = {
   email: string;
 };
 
-type ErrorResponse = {
-  message: string;
-};
-
 type AuthApiState = {
   basicUserInfo?: UserBasicInfo | null;
   userProfileData?: UserProfileData | null;
@@ -44,20 +41,37 @@ const initialState: AuthApiState = {
 
 export const login = createAsyncThunk(
   "login",
-  async (data: User, { rejectWithValue }) => {
+  async (data: User, { rejectWithValue, dispatch }) => {
     try {
       const response = await axiosInstance.post("/login", data);
       const resData = response.data;
 
       localStorage.setItem("userInfo", JSON.stringify(resData));
+      dispatch(
+        showNotification({
+          message: resData.message || "Success",
+          type: NotificationType.Success,
+        })
+      );
 
       return resData;
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorResponse = error.response.data;
-
+        dispatch(
+          showNotification({
+            message: errorResponse.message,
+            type: NotificationType.Error,
+          })
+        );
         return rejectWithValue(errorResponse);
       }
+      dispatch(
+        showNotification({
+          message: "An error occurred",
+          type: NotificationType.Error,
+        })
+      );
 
       throw error;
     }
@@ -66,20 +80,39 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   "register",
-  async (data: NewUser, { rejectWithValue }) => {
+  async (data: NewUser, { rejectWithValue, dispatch }) => {
     try {
       const response = await axiosInstance.post("/register", data);
       const resData = response.data;
 
       localStorage.setItem("userInfo", JSON.stringify(resData));
+      dispatch(
+        showNotification({
+          message: resData.message || "Success",
+          type: NotificationType.Success,
+        })
+      );
 
       return resData;
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorResponse = error.response.data;
+        dispatch(
+          showNotification({
+            message: errorResponse.message,
+            type: NotificationType.Error,
+          })
+        );
 
         return rejectWithValue(errorResponse);
       }
+
+      dispatch(
+        showNotification({
+          message: "An error occurred",
+          type: NotificationType.Error,
+        })
+      );
 
       throw error;
     }
@@ -88,10 +121,16 @@ export const register = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "logout",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await axiosInstance.post("/logout", {});
       const resData = response.data;
+      dispatch(
+        showNotification({
+          message: resData.message || "Success",
+          type: NotificationType.Success,
+        })
+      );
 
       localStorage.removeItem("userInfo");
 
@@ -99,9 +138,21 @@ export const logout = createAsyncThunk(
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorResponse = error.response.data;
+        dispatch(
+          showNotification({
+            message: errorResponse.message,
+            type: NotificationType.Error,
+          })
+        );
 
         return rejectWithValue(errorResponse);
       }
+      dispatch(
+        showNotification({
+          message: "An error occurred",
+          type: NotificationType.Error,
+        })
+      );
 
       throw error;
     }
@@ -110,21 +161,47 @@ export const logout = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
   "users/profile",
-  async (userId: string, { rejectWithValue }) => {
+  async (userId: string, { rejectWithValue, dispatch }) => {
     try {
       const response = await axiosInstance.get(`/users/${userId}`);
-      return response.data;
+      const resData = response.data;
+
+      dispatch(
+        showNotification({
+          message: resData.message || "Success",
+          type: NotificationType.Success,
+        })
+      );
+
+      return resData;
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const errorResponse = error.response.data;
+        dispatch(
+          showNotification({
+            message: errorResponse.message,
+            type: NotificationType.Error,
+          })
+        );
 
         return rejectWithValue(errorResponse);
       }
+      dispatch(
+        showNotification({
+          message: "An error occurred",
+          type: NotificationType.Error,
+        })
+      );
 
       throw error;
     }
   }
 );
+
+interface ErrorResponse {
+  message: string;
+  // You can add other properties if needed
+}
 
 const authSlice = createSlice({
   name: "auth",
@@ -145,6 +222,7 @@ const authSlice = createSlice({
       )
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
+
         if (action.payload) {
           state.error =
             (action.payload as ErrorResponse).message || "Login failed";
