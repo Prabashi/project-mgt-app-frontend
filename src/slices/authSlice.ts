@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
 import { AxiosError } from "axios";
+import { ErrorResponse } from "../constants";
 
 type User = {
   email: string;
@@ -15,15 +16,12 @@ type UserBasicInfo = {
   id: string;
   name: string;
   email: string;
+  roles: string[];
 };
 
 type UserProfileData = {
   name: string;
   email: string;
-};
-
-type ErrorResponse = {
-  message: string;
 };
 
 type AuthApiState = {
