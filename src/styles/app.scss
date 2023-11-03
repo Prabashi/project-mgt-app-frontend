@@ -1,0 +1,21 @@
+.modal {
+  // max-height: 75%;
+
+}
+.modal-paper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 32px;
+}
+
+// TODO: Center the button vertically
+.add-button {
+  margin-top: 20px;
+  margin-right: 20px;
+  padding: 10px;
+  background-color: lightblue;
+  // vertical-align:middle;
+  // border-radius: 45;
+}
