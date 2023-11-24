@@ -3,10 +3,7 @@ import { Task, updateTask, getTask } from "../../slices/taskSlice";
 import { useEffect, useState } from "react";
 import TaskPopup from "./TaskPopup";
 
-// type NewTask = Omit<Task, 'id'>
-
 interface UpdateTaskPopupProps {
-  //   open: boolean;
   taskId: number | null;
 }
 

@@ -19,12 +19,13 @@ const UpdateDashboardPopup = ({ dashboardId }: UpdateDashboardPopupProps) => {
   const selectedDashboard = useAppSelector(
     (state) => state.dashboards.selectedDashboard
   );
+  const projects = useAppSelector((state) => state.projects.projects);
 
   const [dashboard, setDashboard] = useState<Dashboard>({
     id: "",
     name: "",
     description: "",
-    projectId: "",
+    project: { id: "", name: "" },
   });
 
   // TODO: Handle dashboardId being null
@@ -36,7 +37,13 @@ const UpdateDashboardPopup = ({ dashboardId }: UpdateDashboardPopupProps) => {
 
   useEffect(() => {
     if (selectedDashboard) {
-      setDashboard({ ...selectedDashboard });
+      const project = projects.find(
+        (option) => option.id === selectedDashboard.projectId
+      );
+
+      if (project) {
+        setDashboard({ ...selectedDashboard, project: project });
+      }
     } else {
       // TODO: Show error msg
     }

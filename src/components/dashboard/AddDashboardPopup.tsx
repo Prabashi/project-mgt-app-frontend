@@ -1,5 +1,9 @@
 import { useAppDispatch } from "../../hooks/redux-hooks";
-import { NewDashboard, createDashboard } from "../../slices/dashboardSlice";
+import {
+  NewDashboard,
+  NewDashboardFinal,
+  createDashboard,
+} from "../../slices/dashboardSlice";
 import { useState } from "react";
 import DashboardPopup from "./DashboardPopup";
 interface AddDashboardPopupProps {
@@ -12,12 +16,12 @@ const AddDashboardPopup = ({}: AddDashboardPopupProps) => {
   const [dashboard, setDashboard] = useState<NewDashboard>({
     name: "",
     description: "",
-    projectId: "",
+    project: null,
   });
 
   const submitNewDashboard = () => {
-    if (dashboard.name && dashboard.projectId) {
-      dispatch(createDashboard(dashboard as NewDashboard));
+    if (dashboard.name && dashboard.project) {
+      dispatch(createDashboard(dashboard as NewDashboardFinal));
     }
   };
 

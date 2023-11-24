@@ -2,21 +2,43 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
 import { AxiosError } from "axios";
+import { Project } from "./taskSlice";
 
 export type NewDashboard = {
   name: string;
   description: string;
-  projectId: string;
+  project: Project | null;
   // status: string
 };
 
 export type Dashboard = NewDashboard & {
   id: string;
+  project: Project;
+};
+
+export type NewDashboardPayload = {
+  projectId: string;
+  name: string;
+  description: string;
+};
+
+export type UpdateDashboardPayload = {
+  projectId: string;
+  name: string;
+  description: string;
+};
+
+export type NewDashboardFinal = NewDashboard & {
+  project: Project;
+};
+
+export type DashboardBasicInfo = NewDashboardPayload & {
+  id: string;
 };
 
 interface DashboardState {
-  dashboards: Dashboard[];
-  selectedDashboard: Dashboard | undefined;
+  dashboards: DashboardBasicInfo[];
+  selectedDashboard: DashboardBasicInfo | undefined;
   status: "idle" | "loading" | "failed";
   error: string | null;
 }
@@ -66,12 +88,12 @@ export const getDashboard = createAsyncThunk(
 
 export const createDashboard = createAsyncThunk(
   "dashboards/createOne",
-  async (dashboard: NewDashboard, { rejectWithValue }) => {
+  async (dashboard: NewDashboardFinal, { rejectWithValue }) => {
     try {
-      const dashboardPayload: NewDashboard = {
+      const dashboardPayload: NewDashboardPayload = {
         name: dashboard.name,
         description: dashboard.description,
-        projectId: dashboard.projectId,
+        projectId: dashboard.project.id,
       };
       const response = await axiosInstance.post(
         "/dashboards",
@@ -94,10 +116,10 @@ export const updateDashboard = createAsyncThunk(
   "dashboards/updateOne",
   async (dashboard: Dashboard, { rejectWithValue }) => {
     try {
-      const updateDashboardPayload: NewDashboard = {
+      const updateDashboardPayload: UpdateDashboardPayload = {
         name: dashboard.name,
         description: dashboard.description,
-        projectId: dashboard.projectId,
+        projectId: dashboard.project.id,
       };
       const response = await axiosInstance.patch(
         `/dashboards/${dashboard.id}`,
@@ -172,7 +194,7 @@ export const dashboardSlice = createSlice({
       })
       .addCase(
         getDashboards.fulfilled,
-        (state, action: PayloadAction<Dashboard[]>) => {
+        (state, action: PayloadAction<DashboardBasicInfo[]>) => {
           state.status = "idle";
           state.dashboards = action.payload;
         }
@@ -187,7 +209,7 @@ export const dashboardSlice = createSlice({
       })
       .addCase(
         getDashboard.fulfilled,
-        (state, action: PayloadAction<Dashboard>) => {
+        (state, action: PayloadAction<DashboardBasicInfo>) => {
           state.status = "idle";
           state.selectedDashboard = action.payload;
         }
@@ -204,7 +226,7 @@ export const dashboardSlice = createSlice({
       })
       .addCase(
         createDashboard.fulfilled,
-        (state, action: PayloadAction<Dashboard>) => {
+        (state, action: PayloadAction<DashboardBasicInfo>) => {
           state.status = "idle";
           state.dashboards.push(action.payload);
         }
@@ -220,7 +242,7 @@ export const dashboardSlice = createSlice({
       })
       .addCase(
         updateDashboard.fulfilled,
-        (state, action: PayloadAction<Dashboard>) => {
+        (state, action: PayloadAction<DashboardBasicInfo>) => {
           state.status = "idle";
           const updatedTask = action.payload;
           const index = state.dashboards.findIndex(

@@ -6,12 +6,12 @@ type FormTextFieldProps = {
   label: string;
   name: string;
   options: any[];
-  value: string | null | undefined;
+  value: any;
   isRequired: boolean | undefined;
   isDisabled?: boolean | undefined;
   onChange: (
     event: SyntheticEvent<Element, Event>,
-    value: string | null,
+    value: any,
     name: string
   ) => void;
 };

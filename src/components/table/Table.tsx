@@ -3,7 +3,7 @@ import "../../styles/table.scss";
 
 type TableProps = {
   columns: GridColDef[];
-  rows: RowProps[];
+  rows: any[];
   onClickRow?: (id: string | number) => void;
 };
 

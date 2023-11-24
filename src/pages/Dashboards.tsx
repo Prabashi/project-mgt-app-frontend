@@ -16,7 +16,7 @@ export default function Dashboards() {
     dispatch(
       openModal({
         modalName: "updateDashboard",
-        modalProps: { DashboardId: id },
+        modalProps: { dashboardId: id },
       })
     );
   };

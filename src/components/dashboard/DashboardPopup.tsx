@@ -1,24 +1,17 @@
-import { Grid, CssBaseline, SelectChangeEvent } from "@mui/material";
-import ModalPopup from "../modal/ModalPopup";
-import { Dashboard } from "../../slices/dashboardSlice";
-import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
+import { Grid, SelectChangeEvent } from "@mui/material";
+import { SyntheticEvent } from "react";
 import FormTextField from "../form/FormTextField";
-import SubmitButton from "../form/SubmitButton";
-import CancelButton from "../form/CancelButton";
 import FormModal from "../modal/FormModal";
-import FormAutoCompleteField from "../form/FormAutoCompleteField";
-import FormSelectionField from "../form/FormSelectionField";
-// import { NewDashboard } from "../../slices/dashboardSlice";
 import FormTextAreaField from "../form/FormTextAreaField";
-import "../../styles/task.scss"; // TODO
+import "../../styles/dashboard.scss";
 import ProjectAutoCompleteField from "../dropdowns/ProjectAutoCompleteField";
+import { Project } from "../../slices/taskSlice";
+import { Dashboard, NewDashboard } from "../../slices/dashboardSlice";
 
 interface DashboardPopupProps {
-  // open: boolean;
   title: string;
-  dashboard: any; // TODO: Task, NewTask
-  setDashboard: React.Dispatch<React.SetStateAction<any>>; // TODO
-  // initialState?: Task;
+  dashboard: Dashboard | NewDashboard;
+  setDashboard: React.Dispatch<React.SetStateAction<any>>;
   onSubmit: () => void;
 }
 
@@ -41,9 +34,9 @@ const DashboardPopup = ({
     });
   };
 
-  const handleAutoCompleteChange = (
+  const handleProjectAutoCompleteChange = (
     e: SyntheticEvent<Element, Event>,
-    value: string | null,
+    value: Project | null,
     name: string
   ) => {
     setDashboard({
@@ -54,7 +47,6 @@ const DashboardPopup = ({
 
   return (
     <>
-      {/* <CssBaseline /> */}
       <FormModal
         title={title}
         onSubmit={handleSubmit}
@@ -82,27 +74,9 @@ const DashboardPopup = ({
           <Grid item xs={12} mt={2}>
             <ProjectAutoCompleteField
               value={dashboard.project}
-              onChange={handleAutoCompleteChange}
+              onChange={handleProjectAutoCompleteChange}
             />
-            {/* <FormAutoCompleteField
-              label="Project"
-              name="project"
-              options={projectOptions}
-              value={dashboard.project}
-              isRequired={true}
-              onChange={handleAutoCompleteChange}
-            /> */}
           </Grid>
-          {/* <Grid item xs={12} mt={2}>
-            <FormSelectionField
-              label="Status"
-              name="status"
-              options={STATUS_LIST}
-              value={dashboard.status}
-              isRequired={true}
-              onChange={handleInputChange}
-            />
-          </Grid> */}
         </Grid>
       </FormModal>
     </>

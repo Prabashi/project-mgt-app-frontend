@@ -1,12 +1,8 @@
-import { Grid, CssBaseline, SelectChangeEvent } from "@mui/material";
-import ModalPopup from "../modal/ModalPopup";
+import { Grid, SelectChangeEvent } from "@mui/material";
 import { Task } from "../../slices/taskSlice";
-import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent } from "react";
 import FormTextField from "../form/FormTextField";
-import SubmitButton from "../form/SubmitButton";
-import CancelButton from "../form/CancelButton";
 import FormModal from "../modal/FormModal";
-import FormAutoCompleteField from "../form/FormAutoCompleteField";
 import FormSelectionField from "../form/FormSelectionField";
 import { NewTask } from "../../slices/taskSlice";
 import FormTextAreaField from "../form/FormTextAreaField";
@@ -15,33 +11,14 @@ import "../../styles/task.scss";
 import ProjectAutoCompleteField from "../dropdowns/ProjectAutoCompleteField";
 import AssigneeAutoCompleteField from "../dropdowns/AssigneeAutoCompleteField";
 
-// type NewTask = Omit<Task, 'id'>
-
 interface TaskPopupProps {
-  // open: boolean;
   title: string;
-  task: any; // TODO: Task, NewTask
-  setTask: React.Dispatch<React.SetStateAction<any>>; // TODO
-  // initialState?: Task;
+  task: Task | NewTask;
+  setTask: React.Dispatch<React.SetStateAction<any>>;
   onSubmit: () => void;
 }
 
 const TaskPopup = ({ title, task, setTask, onSubmit }: TaskPopupProps) => {
-  // const [task, setTask] = useState<Task | NewTask>({
-  //   project: "",
-  //   name: "",
-  //   description: "",
-  //   priority: "",
-  //   assignee: "",
-  //   status: "",
-  // });
-
-  // useEffect(() => {
-  //   if (initialState) {
-  //     setTask({ ...initialState });
-  //   }
-  // }, [initialState]);
-
   const handleSubmit = () => {
     onSubmit();
   };
@@ -57,7 +34,7 @@ const TaskPopup = ({ title, task, setTask, onSubmit }: TaskPopupProps) => {
 
   const handleAutoCompleteChange = (
     e: SyntheticEvent<Element, Event>,
-    value: string | null,
+    value: any,
     name: string
   ) => {
     setTask({
@@ -68,7 +45,6 @@ const TaskPopup = ({ title, task, setTask, onSubmit }: TaskPopupProps) => {
 
   return (
     <>
-      {/* <CssBaseline /> */}
       <FormModal
         title={title}
         onSubmit={handleSubmit}
@@ -80,14 +56,6 @@ const TaskPopup = ({ title, task, setTask, onSubmit }: TaskPopupProps) => {
               value={task.project}
               onChange={handleAutoCompleteChange}
             />
-            {/* <FormAutoCompleteField
-              label="Project"
-              name="project"
-              options={projectOptions}
-              value={task.project}
-              isRequired={true}
-              onChange={handleAutoCompleteChange}
-            /> */}
           </Grid>
           <Grid item xs={12} mt={2}>
             <FormTextField
@@ -122,14 +90,6 @@ const TaskPopup = ({ title, task, setTask, onSubmit }: TaskPopupProps) => {
               value={task.assignee}
               onChange={handleAutoCompleteChange}
             />
-            {/* <FormAutoCompleteField
-              label="Assignee"
-              name="assignee"
-              options={assigneeOptions}
-              value={task.assignee}
-              isRequired={true}
-              onChange={handleAutoCompleteChange}
-            /> */}
           </Grid>
           <Grid item xs={12} mt={2}>
             <FormSelectionField

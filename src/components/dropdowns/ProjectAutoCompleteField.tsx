@@ -1,14 +1,15 @@
 import React, { SyntheticEvent } from "react";
 import FormAutoCompleteField from "../form/FormAutoCompleteField";
 import { useAppSelector } from "../../hooks/redux-hooks";
+import { Project } from "../../slices/taskSlice";
 
 type ProjectAutoCompleteFieldProps = {
-  value: string | null | undefined;
+  value: Project | null;
   //   isRequired: boolean | undefined;
   //   isDisabled?: boolean | undefined;
   onChange: (
     event: SyntheticEvent<Element, Event>,
-    value: string | null,
+    value: Project | null,
     name: string
   ) => void;
 };
